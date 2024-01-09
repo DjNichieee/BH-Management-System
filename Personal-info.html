@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Add your CSS link here -->
+  <link rel="stylesheet" href="Personal-info.css" />
+  <!-- Font Awesome Cdn Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    integrity="sha384-some-hash>" crossorigin="anonymous" />
+</head>
+
+<body>
+  <div class="container">
+    <nav>
+      <ul>
+        <li>
+          <a href="Dashboard.html" class="logo">
+            <img src="Housing.jpg" alt="">
+            <p class="nav-item"> Web-based Boarding <br>House Management</p>
+          </a>
+        </li>
+
+        <li>
+          <a href="Personal-info.html">
+            <i class="fas fa-users" style="color: #79778d; font-size: 24px;"></i>
+            <span class="nav-item"> Personal Information</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="Transaction.html">
+            <i class="fas fa-wallet" style="color: #79778d; font-size: 24px;"></i>
+            <span class="nav-item">Transaction</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="Contact-Us.html">
+            <i class="fas fa-address-book" style="color: #79778d; font-size: 24px;"></i>
+            <span class="nav-item"> Contact Us</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <section class="main">
+      <div class="main-top">
+        <h1>Dashboard</h1>
+        <i class="fas fa-user-cog"></i>
+        <button onclick="openModal()"><i class="fa-solid fa-plus"></i></button>
+      </div>
+
+      <div class="modal" id="addTenantModal">
+        <div class="modal-content">
+          <span class="close" onclick="closeModal()">&times;</span>
+          <h2>Add New Tenant</h2>
+
+          <!-- Tenant Information Form -->
+          <form id="tenantForm">
+            <div class="form-group">
+              <label for="tenantID">Tenant ID</label>
+              <input type="text" id="tenantID" name="tenantID" readonly>
+            </div>
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="middleName">Middle Name</label>
+              <input type="text" id="middleName" name="middleName">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
+            <div class="form-group">
+              <label for="suffix">Suffix</label>
+              <input type="text" id="suffix" name="suffix">
+            </div>
+            <div class="form-group">
+              <label for="civilStatus">Civil Status</label>
+              <select id="civilStatus" name="civilStatus" required>
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+                <option value="divorced">Divorced</option>
+                <option value="widowed">Widowed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="birthdate">Birthdate</label>
+              <input type="date" id="birthdate" name="birthdate" required>
+            </div>
+            <div class="form-group">
+              <label for="birthplace">Birthplace</label>
+              <input type="text" id="birthplace" name="birthplace" required>
+            </div>
+            <div class="form-group">
+              <label for="citizenship">Citizenship</label>
+              <input type="text" id="citizenship" name="citizenship" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <div>
+                <input type="radio" id="male" name="gender" value="male" required>
+                <label for="male">Male</label>
+              </div>
+              <div>
+                <input type="radio" id="female" name="gender" value="female" required>
+                <label for="female">Female</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <button type="button" onclick="addTenant()">Add Tenant</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="main-skills" id="tenantCards">
+        <!-- Tenant Cards will be added here dynamically -->
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        // Load existing tenants from local storage
+        loadTenants();
+      });
+
+      function openModal() {
+        const modal = document.getElementById("addTenantModal");
+        modal.style.display = "block";
+        generateTenantID();
+
+        // Change the button text to "Add Tenant" for a new entry
+        document.querySelector('.form-group button').textContent = 'Add Tenant';
+
+        // Update the click event of the button to call the addTenant function
+        document.querySelector('.form-group button').onclick = function () {
+          addTenant();
+        };
+      }
+
+      function closeModal() {
+        const modal = document.getElementById("addTenantModal");
+        modal.style.display = "none";
+      }
+
+      function generateTenantID() {
+        const timestamp = new Date().getTime();
+        document.getElementById("tenantID").value = `TID-${timestamp}`;
+      }
+
+      function addTenant() {
+        const form = document.getElementById("tenantForm");
+        const formData = new FormData(form);
+
+        // Create a tenant object
+        const tenant = {
+          tenantID: formData.get('tenantID'),
+          firstName: formData.get('firstName'),
+          lastName: formData.get('lastName'),
+          civilStatus: formData.get('civilStatus'),
+          birthdate: formData.get('birthdate'),
+          gender: formData.get('gender'),
+          address: formData.get('address'),
+          // Add more fields as needed
+        };
+
+        // Save tenant to local storage
+        saveTenant(tenant);
+
+        // Add tenant card to the UI
+        addTenantCard(tenant);
+
+        closeModal();
+      }
+
+      function addTenantCard(tenant) {
+        const mainSkills = document.getElementById("tenantCards");
+        const newCard = document.createElement('div');
+        newCard.classList.add('card');
+        newCard.dataset.tenantid = tenant.tenantID;
+        newCard.dataset.originaltenantid = tenant.tenantID; // Add a data attribute for original tenant ID
+
+        newCard.innerHTML = `
+          <i class="fa-regular fa-user"></i>
+          <h3>Tenant ID: ${tenant.tenantID}</h3>
+          <p>Name: ${tenant.firstName} ${tenant.lastName}</p>
+          <p>Civil Status: ${tenant.civilStatus}</p>
+          <p>Birthdate: ${tenant.birthdate}</p>
+          <p>Gender: ${tenant.gender}</p>
+          <p>Address: ${tenant.address}</p>
+          <!-- Add more fields as needed -->
+          <div class="card-icons">
+            <i class="fas fa-edit" onclick="editTenant('${tenant.tenantID}')"></i>
+            <i class="fas fa-trash" onclick="deleteTenant('${tenant.tenantID}')"></i>
+          </div>
+        `;
+        mainSkills.appendChild(newCard);
+      }
+
+      function saveTenant(tenant) {
+        // Load existing tenants from local storage
+        const existingTenants = JSON.parse(localStorage.getItem('tenants')) || [];
+        // Add the new tenant
+        existingTenants.push(tenant);
+        // Save the updated tenants to local storage
+        localStorage.setItem('tenants', JSON.stringify(existingTenants));
+      }
+
+      function loadTenants() {
+        const existingTenants = JSON.parse(localStorage.getItem('tenants')) || [];
+        existingTenants.forEach(addTenantCard);
+      }
+
+      function deleteTenant(tenantID) {
+        // Load existing tenants from local storage
+        let existingTenants = JSON.parse(localStorage.getItem('tenants')) || [];
+        // Remove the tenant with the specified ID
+        existingTenants = existingTenants.filter(tenant => tenant.tenantID !== tenantID);
+        // Save the updated tenants to local storage
+        localStorage.setItem('tenants', JSON.stringify(existingTenants));
+
+        // Remove the card from the UI
+        const cardToRemove = document.querySelector(`[data-tenantid="${tenantID}"]`);
+        if (cardToRemove) {
+          cardToRemove.remove();
+        }
+      }
+
+      function editTenant(tenantID) {
+        const existingTenants = JSON.parse(localStorage.getItem('tenants')) || [];
+        const tenantToEdit = existingTenants.find(tenant => tenant.tenantID === tenantID);
+
+        if (tenantToEdit) {
+          // Populate the form fields with existing data
+          document.getElementById('tenantID').value = tenantToEdit.tenantID;
+          document.getElementById('firstName').value = tenantToEdit.firstName;
+          document.getElementById('middleName').value = tenantToEdit.middleName || '';
+          document.getElementById('lastName').value = tenantToEdit.lastName;
+          document.getElementById('suffix').value = tenantToEdit.suffix || '';
+          document.getElementById('civilStatus').value = tenantToEdit.civilStatus;
+          document.getElementById('birthdate').value = tenantToEdit.birthdate;
+          document.getElementById('birthplace').value = tenantToEdit.birthplace || '';
+          document.getElementById('citizenship').value = tenantToEdit.citizenship || '';
+          document.getElementById('phone').value = tenantToEdit.phone || '';
+          document.getElementById('address').value = tenantToEdit.address;
+          document.getElementById(tenantToEdit.gender).checked = true; // Assuming gender values are 'male' or 'female'
+
+          // Change the button text to "Save Changes"
+          document.querySelector('.form-group button').textContent = 'Save Changes';
+
+          // Update the click event of the button to call the saveEditedTenant function
+          document.querySelector('.form-group button').onclick = function () {
+            saveEditedTenant(tenantID);
+          };
+
+          // Open the modal for editing
+          openModal();
+        } else {
+          // Display an alert if no tenant is found
+          alert("Tenant not found");
+        }
+      }
+
+      function saveEditedTenant(originalTenantID) {
+        // Get the edited data from the form
+        const editedTenantData = getFormData();
+
+        // Load existing tenants from local storage
+        let existingTenants = JSON.parse(localStorage.getItem('tenants')) || [];
+
+        // Update the existing tenant data
+        existingTenants = existingTenants.map(tenant => {
+          if (tenant.tenantID === originalTenantID) {
+            return { ...tenant, ...editedTenantData };
+          }
+          return tenant;
+        });
+
+        // Save the updated tenants to local storage
+        localStorage.setItem('tenants', JSON.stringify(existingTenants));
+
+        // Update the UI with the edited data
+        updateTenantCard(originalTenantID, editedTenantData);
+
+        // Close the modal after saving changes
+        closeModal();
+      }
+
+      function updateTenantCard(originalTenantID, editedTenantData) {
+        // Find and update the card with the edited data
+        const cardToUpdate = document.querySelector(`[data-originaltenantid="${originalTenantID}"]`);
+        if (cardToUpdate) {
+          cardToUpdate.innerHTML = `
+            <i class="fa-regular fa-user"></i>
+            <h3>Tenant ID: ${editedTenantData.tenantID}</h3>
+            <p>Name: ${editedTenantData.firstName} ${editedTenantData.lastName}</p>
+            <p>Civil Status: ${editedTenantData.civilStatus}</p>
+            <p>Birthdate: ${editedTenantData.birthdate}</p>
+            <p>Gender: ${editedTenantData.gender}</p>
+            <p>Address: ${editedTenantData.address}</p>
+            <!-- Add more fields as needed -->
+            <div class="card-icons">
+              <i class="fas fa-edit" onclick="editTenant('${editedTenantData.tenantID}')"></i>
+              <i class="fas fa-trash" onclick="deleteTenant('${editedTenantData.tenantID}')"></i>
+            </div>
+          `;
+        }
+      }
+
+      function getFormData() {
+        const form = document.getElementById("tenantForm");
+        const formData = new FormData(form);
+
+        // Create an object from the form data
+        const tenantData = {};
+        formData.forEach((value, key) => {
+          tenantData[key] = value;
+        });
+
+        return tenantData;
+      }
+    </script>
+  </div>
+</body>
+
+</html>

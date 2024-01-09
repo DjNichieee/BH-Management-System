@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Web-based Boarding House  Management</title>
+  <link rel="stylesheet" href="Inquiries.css" />
+  <!-- Font Awesome Cdn Link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-some-hash>" crossorigin="anonymous" />
+
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <ul>
+
+        <li><a href="Dashboard.html" class="logo">
+          <img src="Housing.jpg" alt="">
+          <p class="nav-item"> Web-based Boarding <br>House Management</p>
+
+    
+          <li><a href="Personal-info.html">
+            <i class="fas fa-users" style="color: #79778d; font-size: 24px;"></i>
+            <span class="nav-item"> Personal Information</span>
+          </a></li>
+
+        <li><a href="Transaction.html">
+          <i class="fas fa-wallet" style="color: #79778d; font-size: 24px;"></i>
+          <span class="nav-item">Transaction</span>
+        </a></li>
+
+        <li><a href="Contact-Us.html">
+          <i class="fas fa-address-book" style="color: #79778d; font-size: 24px;"></i>
+          <span class="nav-item"> Contact Us</span>
+        </a></li>
+
+    </nav>
+
+<body>
+    <div class="container1">
+      <section>
+        <h2>Service Inquiries</h2>
+        <p>Tenants Request Service from the BH</p>
+        
+        <div class="service-form">
+          <h3>Submit Service Request</h3>
+          <form>
+
+            <label for="serviceName">Service Name:</label>
+            <input type="text" id="serviceName" name="serviceName" required>
+      
+            <label for="description">Description:</label>
+            <textarea id="description" name="description" required></textarea>
+      
+            <button type="submit">Submit Request</button>
+          </form>
+        </div>
+      
+        <div class="service-history">
+          <h3>Service Request History</h3>
+      
+          <ul>
+            <li>Request #1 - Service Name: Plumbing</li>
+            <li>Request #2 - Service Name: Electrical</li>
+            <li>Request #3 - Service Name: Appliance Repair</li>
+            <li>Request #4 - Service Name: Water Repair</li>
+            <li> (If none, please enter a Request.)</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </body>
+  </html>
